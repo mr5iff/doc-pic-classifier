@@ -6,17 +6,23 @@ from faker import Faker
 import time
 import logging
 
+CURRENT_DIR = os.path.dirname(__file__)
 
-TEMPLATE_DIR = '../templates'
-OUTPUT_DIR = '../../data/html'
-test_template_name = 'doc_template_01.html'
+# for faking data
+fake = Faker()
+
+TEMPLATE_DIR = os.path.join(CURRENT_DIR, '../templates')
+OUTPUT_DIR = os.path.join(CURRENT_DIR, '../../data/html')
+test_template_names = ['doc_template_01.html', 'doc_template_02.html']
 
 
 class DocPicGenerator(object):
-    def __init__(self, template_dir, output_dir):
+    def __init__(self, template_dir, output_dir, data_generator=None):
         self.TEMPLATE_DIR = template_dir
         self.OUTPUT_DIR = output_dir
-        self._fake = Faker()
+        if data_generator is None:
+            data_generator = lambda param=None: {'name': fake.name(), 'address': fake.address()}
+        self.data_generator = data_generator
 
     def _gen_doc_html(self, template_name, data={}):
         # Create the jinja2 environment.
@@ -29,8 +35,7 @@ class DocPicGenerator(object):
         return html_text
 
     def gen_fake_data(self, count=10):
-        fake = self._fake
-        return [{'name': fake.name(), 'address': fake.address()} for _ in range(count)]
+        return [self.data_generator() for _ in range(count)]
 
     def _html_name(self, template_name, idx=''):
         """generate the html file name"""
@@ -45,13 +50,16 @@ class DocPicGenerator(object):
             fp.write(html_text)
             logging.info('output_file_name {} created'.format(output_file_name))
 
-    def output_htmls(self, template_name, count=10):
+    def output_htmls(self, template_names, count=10):
         fake_data_list = self.gen_fake_data(count)
-        for i, data in enumerate(fake_data_list):
-            output_file_name = self._html_name(template_name, idx=i)
-            self.output_html(template_name, output_file_name=output_file_name, data=data)
+        if not isinstance(template_names, list):
+            template_names = [template_names]
+        for template_name in template_names:
+            for i, data in enumerate(fake_data_list):
+                output_file_name = self._html_name(template_name=template_name, idx=i)
+                self.output_html(template_name=template_name, output_file_name=output_file_name, data=data)
 
 
 if __name__ == '__main__':
     docPicGen = DocPicGenerator(template_dir=TEMPLATE_DIR, output_dir=OUTPUT_DIR)
-    docPicGen.output_htmls(template_name=test_template_name, count=10)
+    docPicGen.output_htmls(template_names=test_template_names, count=10)
