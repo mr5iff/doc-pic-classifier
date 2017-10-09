@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+  table, th, td{
+      border: 1px solid black;
+  }
+  </style>
+  <title>Form 4</title>
+</head>
+<body>
+  <form>
+    Project: <input type="text" value="{{ data.name|default('')}}"><br>
+    Owner: <input type="text" value="{{ data.address|default('')}}"><br>
+    Members: <input type="text" value="{{ data.address|default('')}}"><br>
+    Description: <input type="text" value="{{ data.address|default('')}}"><br>
+  </form>
+
+
+  <div>Some Table</div>
+  <table>
+    <tr>
+      <th>Col1</th>
+      <th>Col2</th>
+      <th>Col3</th>
+
+    </tr>
+    <tr>
+      <td>{{ data.name|default('')}}</td>
+      <td>{{ data.name|default('')}}</td>
+      <td>{{ data.name|default('')}}</td>
+    </tr>
+  </table>
+
+  <div>Comments</div>
+  <input type="text" name="fname" width="200" height="150" value="{{ data.paragraph|default('')}}">
+</body>
+</html>

@@ -13,7 +13,7 @@ fake = Faker()
 
 TEMPLATE_DIR = os.path.join(CURRENT_DIR, '../templates')
 OUTPUT_DIR = os.path.join(CURRENT_DIR, '../../data/html')
-test_template_names = ['doc_template_01.html', 'doc_template_02.html']
+test_template_names = ['doc_template_01.html', 'doc_template_02.html', 'doc_template_03.html', 'doc_template_04.html']
 
 
 class DocPicGenerator(object):
@@ -21,7 +21,7 @@ class DocPicGenerator(object):
         self.TEMPLATE_DIR = template_dir
         self.OUTPUT_DIR = output_dir
         if data_generator is None:
-            data_generator = lambda param=None: {'name': fake.name(), 'address': fake.address()}
+            data_generator = lambda param=None: {'name': fake.name(), 'address': fake.address(), 'paragraph': fake.text()}
         self.data_generator = data_generator
 
     def _gen_doc_html(self, template_name, data={}):
@@ -62,4 +62,4 @@ class DocPicGenerator(object):
 
 if __name__ == '__main__':
     docPicGen = DocPicGenerator(template_dir=TEMPLATE_DIR, output_dir=OUTPUT_DIR)
-    docPicGen.output_htmls(template_names=test_template_names, count=10)
+    docPicGen.output_htmls(template_names=test_template_names, count=150)
